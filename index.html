@@ -71,6 +71,58 @@
         flex-direction: column;
         color: rgb(238, 238, 238);
       }
+      
+      #redirect-container {
+        display: none;
+        margin-top: 1rem;
+        padding: 0.5rem;
+        background-color: #f0f0f0;
+        border-radius: 3px;
+        width: 100%;
+      }
+      
+      .redirect-buttons {
+        display: flex;
+        gap: 1rem;
+        margin-top: 0.5rem;
+        justify-content: flex-end;
+      }
+      
+      .redirect-btn {
+        font-family: monogram, monospace;
+        border-style: none;
+        border-radius: 3px;
+        padding: 0.5rem 1rem;
+        font-size: inherit;
+        cursor: pointer;
+      }
+      
+      #redirect-btn {
+        background-color: #4CAF50;
+        color: white;
+      }
+      
+      #redirect-no-btn {
+        background-color: #f44336;
+        color: white;
+      }
+      
+      #transition-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: black;
+        opacity: 0;
+        z-index: 1000;
+        animation: fadeIn 1s forwards;
+      }
+      
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
     </style>
     <div id="app">
       <div>
@@ -79,6 +131,13 @@
         <div id="textbox-container" style="display: none">
           <div id="textbox">
             <p id="dialogue" class="ui-text"></p>
+            <div id="redirect-container">
+              <p id="redirect-question" class="ui-text"></p>
+              <div class="redirect-buttons">
+                <button id="redirect-btn" class="redirect-btn">Yes</button>
+                <button id="redirect-no-btn" class="redirect-btn">No</button>
+              </div>
+            </div>
             <div class="btn-container">
               <button id="close" class="ui-close-btn">Close</button>
             </div>

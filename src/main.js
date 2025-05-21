@@ -1,17 +1,17 @@
-import { dialogueData, scaleFactor } from "./constants";
+import { dialogueData, scaleFactor, initialRedirect } from "./constants";
 import { k } from "./kaboomCtx";
-import { displayDialogue, setCamScale } from "./utils";
+import { displayDialogue, setCamScale, triggerPCInteraction } from "./utils";
 
 k.loadSprite("spritesheet", "./spritesheet.png", {
   sliceX: 39,
   sliceY: 31,
   anims: {
-    "idle-down": 936,
-    "walk-down": { from: 936, to: 939, loop: true, speed: 8 },
-    "idle-side": 975,
-    "walk-side": { from: 975, to: 978, loop: true, speed: 8 },
-    "idle-up": 1014,
-    "walk-up": { from: 1014, to: 1017, loop: true, speed: 8 },
+    "idle-down": 788,
+    "walk-down": { from: 788, to: 789, loop: true, speed: 8 },    
+    "idle-side": 790,
+    "walk-side": { from: 790, to: 791, loop: true, speed: 8 },
+    "idle-up": 827,
+    "walk-up": { from: 827, to: 828, loop: true, speed: 8 },
   },
 });
 
@@ -25,14 +25,15 @@ k.scene("main", async () => {
 
   const map = k.add([k.sprite("map"), k.pos(0), k.scale(scaleFactor)]);
 
-  const player = k.make([
+  // Create the player object
+  const player = k.add([
     k.sprite("spritesheet", { anim: "idle-down" }),
     k.area({
       shape: new k.Rect(k.vec2(0, 3), 10, 10),
     }),
     k.body(),
     k.anchor("center"),
-    k.pos(),
+    k.pos(0, 0),  // Initial position will be updated when processing spawnpoints
     k.scale(scaleFactor),
     {
       speed: 250,
@@ -42,10 +43,13 @@ k.scene("main", async () => {
     "player",
   ]);
 
+  // Store the PC object reference
+  let pcObject = null;
+
   for (const layer of layers) {
     if (layer.name === "boundaries") {
       for (const boundary of layer.objects) {
-        map.add([
+        const boundaryObj = map.add([
           k.area({
             shape: new k.Rect(k.vec2(0), boundary.width, boundary.height),
           }),
@@ -53,6 +57,11 @@ k.scene("main", async () => {
           k.pos(boundary.x, boundary.y),
           boundary.name,
         ]);
+        
+        // Store reference to PC object
+        if (boundary.name === "pc") {
+          pcObject = boundaryObj;
+        }
 
         if (boundary.name) {
           player.onCollide(boundary.name, () => {
@@ -75,7 +84,7 @@ k.scene("main", async () => {
             (map.pos.x + entity.x) * scaleFactor,
             (map.pos.y + entity.y) * scaleFactor
           );
-          k.add(player);
+          // No need to add player again, already added above
           continue;
         }
       }
@@ -91,6 +100,13 @@ k.scene("main", async () => {
   k.onUpdate(() => {
     k.camPos(player.worldPos().x, player.worldPos().y - 100);
   });
+
+  // Auto-trigger PC interaction on page load if enabled
+  if (initialRedirect.enabled && pcObject) {
+    setTimeout(() => {
+      triggerPCInteraction(player, pcObject);
+    }, 1000); // Short delay to ensure everything is loaded
+  }
 
   k.onMouseDown((mouseBtn) => {
     if (mouseBtn !== "left" || player.isInDialogue) return;

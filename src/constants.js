@@ -1,9 +1,19 @@
 export const scaleFactor = 4;
 
+// New configuration for initial auto-navigation
+export const initialRedirect = {
+  enabled: true,
+  message: "Would you like to view a simpler version of this website?",
+  redirectURL: "https://marcvidal.vercel.app"
+};
+
 export const dialogueData = {
-  pc: `This is my PC. I work mostly in JavaScript/TypeScript these days.
-    I've made a couple of games in that language. I also like Golang and Python. Anyway regardless of the language, I just like programming.
-    Here is my <a href="https://github.com/jslegenddev" target="_blank">Github</a>!`,
+  pc: {
+    text: `Welcome to my interactive portfolio! Here you can find information about my projects, skills, and background.`,
+    withRedirect: true,
+    redirectText: "Would you like to visit my easier-to-navigate website?",
+    redirectURL: "https://marcvidal.vercel.app"
+  },
   "cs-degree": `This is my CS degree. I hung it on the wall because I'm proud of it. It was a very theoretical degree but I think it gave me a good foundation.`,
   "sofa-table": `That's my sofa. I like to relax here and watch YouTube. 
   I also make game programming tutorials on YouTube. Go sub to <a href="https://youtube.com/@jslegenddev" target="_blank">my channel</a>! (If you like the content)
